@@ -71,29 +71,33 @@ conf = tf.ConfigProto()
 conf.gpu_options.per_process_gpu_memory_fraction=0.5
 lock = threading.Lock()
 
+graph=tf.Graph()
+sess = tf.compat.v1.Session(graph=graph,config=conf)
+
+with sess.as_default(), graph.as_default():
+    context = tf.placeholder(tf.int32, [batch_size, None])
+    np.random.seed(seed)
+    tf.set_random_seed(seed)
+    output = sample.sample_sequence(
+        hparams=hparams, length=length,
+        context=context,
+        batch_size=batch_size,
+        temperature=temperature, top_k=top_k, top_p=top_p
+    )
+
+    saver = tf.train.Saver()
+    ckpt = tf.train.latest_checkpoint(os.path.join('models', model_name))
+    saver.restore(sess, ckpt)
+
 def get_reply(msg_text):
-    with tf.Session(graph=tf.Graph(),config=conf) as sess, lock:
-        context = tf.placeholder(tf.int32, [batch_size, None])
-        np.random.seed(seed)
-        tf.set_random_seed(seed)
-        output = sample.sample_sequence(
-            hparams=hparams, length=length,
-            context=context,
-            batch_size=batch_size,
-            temperature=temperature, top_k=top_k, top_p=top_p
-        )
-
-        saver = tf.train.Saver()
-        ckpt = tf.train.latest_checkpoint(os.path.join('models', model_name))
-        saver.restore(sess, ckpt)
-
+    with sess.as_default(), graph.as_default():
         raw_text = msg_text[-512:]
         context_tokens = enc.encode(raw_text)
         generated = 0
         out = sess.run(output, feed_dict={
                 context: [context_tokens for _ in range(batch_size)]
             })[:, len(context_tokens):]
-        return enc.decode(out[0])
+        return enc.decode(out[0]).strip()
 
 
 import telebot

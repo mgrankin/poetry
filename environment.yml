@@ -18,3 +18,4 @@ dependencies:
     - pysocks
     - tendo
     - schedule
+    - xmljson

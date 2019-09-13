@@ -16,12 +16,17 @@ cat gutenberg-poetry-v001.ndjson | jq .s | sed -e 's/^.//' -e 's/.$//' -e 's/\\/
     >> gutenberg-poetry-v001.txt ## delete JSON quoting
 cd ..
 
-# russian poetry
+# russian corpus
 git clone https://github.com/IlyaGusev/PoetryCorpus.git
-python stripxml.py
+python stripru.py
+
+# german corpus
+git clone https://github.com/thomasnikolaushaider/DLK.git
+python stripde.py
 
 cat data/gutenberg-poetry-v001.txt > data/total.txt
 cat data/russian.txt >> data/total.txt
+cat data/deutscher.txt >> data/total.txt
 
 shuf data/total.txt | head ## random poetry lines
 du -h data/total.txt; wc data/total.txt
@@ -43,6 +48,9 @@ PYTHONPATH=src ./train.py --model_name 117M --dataset ../data/total.npz \
 conda activate gpt2
 export CUDA_VISIBLE_DEVICES=2
 PYTHONPATH=src ./train.py --model_name 345M --dataset ../data/total.npz \
+    --run_name=poet2_345M --batch_size 3 --save_every 10000 --sample_every 1000 --learning_rate=2e-4
+
+PYTHONPATH=src ./train.py --model_name 345M --dataset ../data/total.npz \
     --run_name=poet_345M --batch_size 3 --save_every 10000 --sample_every 1000 --learning_rate=2e-5
 # 2.6
 
@@ -52,12 +60,12 @@ PYTHONPATH=src ./train.py --model_name 345M --dataset ../data/total.npz \
 # 774M
 conda activate gpt2
 export CUDA_VISIBLE_DEVICES=3
-PYTHONPATH=src ./train.py --model_name 774M --dataset ../data/total.npz \
-    --batch_size 1 --save_every 10000 --sample_every 1000 --learning_rate=1e-3 --optimizer=sgd
+#PYTHONPATH=src ./train.py --model_name 774M --dataset ../data/total.npz \
+#    --batch_size 1 --save_every 10000 --sample_every 1000 --learning_rate=1e-3 --optimizer=sgd
 # 3.0
 
 PYTHONPATH=src ./train.py --model_name 774M --dataset ../data/total.npz \
-    --batch_size 1 --save_every 10000 --sample_every 1000 --learning_rate=1e-4 --optimizer=sgd
+    --run_name=poet_774M --batch_size 1 --save_every 10000 --sample_every 1000 --learning_rate=1e-2 --optimizer=sgd
 
 # t.me/NeuroPoetBot
 
