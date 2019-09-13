@@ -14,6 +14,7 @@ import tensorflow as tf
 
 batches_per_sample=1
 BATCHES_PER_RUN = 1
+batch_size=1
 
 # weird, right?
 os.chdir('gpt-2/src')
@@ -24,7 +25,6 @@ os.chdir('..')
 
 model_name='345M'
 seed=None
-batch_size=32
 nsamples=batch_size*batches_per_sample
 temperature=0.9
 top_k=0
