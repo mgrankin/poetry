@@ -8,7 +8,7 @@ import json
 data = json.load(open('config.json'))
 
 from datetime import timedelta
-import json, re, random
+import json, re, random, threading
 import numpy as np
 import tensorflow as tf
 
@@ -69,9 +69,10 @@ elif length > hparams.n_ctx:
 
 conf = tf.ConfigProto()
 conf.gpu_options.per_process_gpu_memory_fraction=0.5
+lock = threading.Lock()
 
 def get_reply(msg_text):
-    with tf.Session(graph=tf.Graph(),config=conf) as sess:
+    with tf.Session(graph=tf.Graph(),config=conf) as sess, lock:
         context = tf.placeholder(tf.int32, [batch_size, None])
         np.random.seed(seed)
         tf.set_random_seed(seed)
