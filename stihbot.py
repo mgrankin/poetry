@@ -24,14 +24,13 @@ import model, sample, encoder
 os.chdir('..')
 
 model_name='345M'
+run_name='poet_345M'
 seed=None
 nsamples=batch_size*batches_per_sample
 temperature=0.9
 top_k=0
 top_p=0.9
 length=400
-
-# fix "checkpoint" file to point on the last checkpoint!
 
 """
 Interactively run the model
@@ -86,7 +85,8 @@ with sess.as_default(), graph.as_default():
     )
 
     saver = tf.train.Saver()
-    ckpt = tf.train.latest_checkpoint(os.path.join('models', model_name))
+    ckpt = tf.train.latest_checkpoint(os.path.join('checkpoint', run_name))
+    print(ckpt)
     saver.restore(sess, ckpt)
 
 def get_reply(msg_text):

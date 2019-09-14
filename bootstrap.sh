@@ -10,7 +10,7 @@ python download_model.py 345M
 python download_model.py 774M
 
 cd ../data
-wget 'http://static.decontextualize.com/gutenberg-poetry-v001.ndjson.gz'
+wget http://static.decontextualize.com/gutenberg-poetry-v001.ndjson.gz
 gunzip gutenberg-poetry-v001.ndjson.gz
 cat gutenberg-poetry-v001.ndjson | jq .s | sed -e 's/^.//' -e 's/.$//' -e 's/\\//g' \
     >> gutenberg-poetry-v001.txt ## delete JSON quoting
@@ -42,7 +42,7 @@ PYTHONPATH=src ./train.py --model_name 117M --dataset ../data/total.npz \
 
 PYTHONPATH=src ./train.py --model_name 117M --dataset ../data/total.npz \
     --run_name=poet_117M --batch_size 5 --save_every 10000 --sample_every 1000 --learning_rate=2e-6
-#
+# 2.55
 
 # 345M
 conda activate gpt2
@@ -54,14 +54,15 @@ PYTHONPATH=src ./train.py --model_name 345M --dataset ../data/total.npz \
 PYTHONPATH=src ./train.py --model_name 345M --dataset ../data/total.npz \
     --run_name=poet_345M --batch_size 3 --save_every 10000 --sample_every 1000 --learning_rate=2e-6
 
+# 2.52
+
 # 774M
 conda activate gpt2
 export CUDA_VISIBLE_DEVICES=3
 PYTHONPATH=src ./train.py --model_name 774M --dataset ../data/total.npz \
-    --run_name=poet_774M --batch_size 1 --save_every 10000 --sample_every 1000 --learning_rate=1e-3 --optimizer=sgd
-# 3.0
+    --run_name=poet2_774M --batch_size 1 --save_every 10000 --sample_every 1000 --learning_rate=2e-4 --optimizer=sgd 
+# 3.2
 
 # t.me/NeuroPoetBot
 
-cp ~/poetry/gpt-2/checkpoint/poet_345M/* ~/poetry/gpt-2/models/345M
 python scheduler.py
