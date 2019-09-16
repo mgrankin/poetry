@@ -2,7 +2,7 @@
 conda env create -f environment.yml
 mkdir data
 
-git clone https://github.com/nshepperd/gpt-2.git
+git clone https://github.com/mgrankin/gpt-2.git
 cd gpt-2
 conda activate gpt2
 python download_model.py 117M
@@ -13,7 +13,7 @@ cd ../data
 wget http://static.decontextualize.com/gutenberg-poetry-v001.ndjson.gz
 gunzip gutenberg-poetry-v001.ndjson.gz
 cat gutenberg-poetry-v001.ndjson | jq .s | sed -e 's/^.//' -e 's/.$//' -e 's/\\//g' \
-    >> gutenberg-poetry-v001.txt ## delete JSON quoting
+    >> gutenberg-poetry-v001.txt # delete JSON quoting
 cd ..
 
 # russian corpus
@@ -28,38 +28,37 @@ cat data/gutenberg-poetry-v001.txt > data/total.txt
 cat data/russian.txt >> data/total.txt
 cat data/deutscher.txt >> data/total.txt
 
-shuf data/total.txt | head ## random poetry lines
+shuf data/total.txt | head # random poetry lines
 du -h data/total.txt; wc data/total.txt
 
 PYTHONPATH=src ./encode.py ../data/total.txt ../data/total.npz --model_name 774M
 
-# 117M
+#### 117M
 conda activate gpt2
 export CUDA_VISIBLE_DEVICES=1
 PYTHONPATH=src ./train.py --model_name 117M --dataset ../data/total.npz \
     --run_name=poet_117M --batch_size 5 --save_every 10000 --sample_every 1000 --learning_rate 2e-5
-# 2.6
+# 2.13
 
 PYTHONPATH=src ./train.py --model_name 117M --dataset ../data/total.npz \
     --run_name=poet_117M --batch_size 5 --save_every 10000 --sample_every 1000 --learning_rate 2e-6
-# 2.55
 
-# 345M
+#### 345M
 conda activate gpt2
 export CUDA_VISIBLE_DEVICES=2
 PYTHONPATH=src ./train.py --model_name 345M --dataset ../data/total.npz \
     --run_name=poet_345M --batch_size 3 --save_every 10000 --sample_every 1000 --learning_rate 2e-5 --memory_saving_gradients 
-# 2.6
+# 2.09
 
 PYTHONPATH=src ./train.py --model_name 345M --dataset ../data/total.npz \
     --run_name=poet_345M --batch_size 3 --save_every 10000 --sample_every 1000 --learning_rate 2e-6 --memory_saving_gradients 
 
-# 774M
+#### 774M
 conda activate gpt2
 export CUDA_VISIBLE_DEVICES=3
 PYTHONPATH=src ./train.py --model_name 774M --dataset ../data/total.npz \
-    --run_name=poet2_774M --batch_size 1 --save_every 10000 --sample_every 1000 --learning_rate 2e-4 --optimizer=sgd 
-# 3.2
+    --run_name=poet2_774M --batch_size 1 --save_every 10000 --sample_every 1000 --learning_rate 1e-3 --optimizer=sgd 
+# 2.87
 
 # t.me/NeuroPoetBot
 

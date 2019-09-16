@@ -30,7 +30,7 @@ nsamples=batch_size*batches_per_sample
 temperature=0.9
 top_k=0
 top_p=0.9
-length=400
+length=512
 
 """
 Interactively run the model
@@ -91,7 +91,9 @@ with sess.as_default(), graph.as_default():
 
 def get_reply(msg_text):
     with sess.as_default(), graph.as_default():
-        raw_text = msg_text[-512:]
+        raw_text = msg_text[-2048:]
+        print("*" * 50)
+        print(raw_text)
         context_tokens = enc.encode(raw_text)
         generated = 0
         out = sess.run(output, feed_dict={
