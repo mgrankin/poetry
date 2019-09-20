@@ -110,12 +110,18 @@ from telebot import apihelper
 
 apihelper.proxy = {'https':data['proxy_str']}
 
+def message_handler(message):
+    try:
+        bot.reply_to(message, get_reply(message.text))
+    except telebot.apihelper.ApiException as e:
+        print(e)
+
 @bot.message_handler(func=lambda m: True)
 def echo_all(message):
-    bot.reply_to(message, get_reply(message.text))
+    message_handler(message)
 
 @bot.channel_post_handler(func=lambda m: True)
 def echo_all(message):
-    bot.reply_to(message, get_reply(message.text))
+    message_handler(message)
 
 bot.polling()
