@@ -34,31 +34,34 @@ du -h data/total.txt; wc data/total.txt
 PYTHONPATH=src ./encode.py ../data/total.txt ../data/total.npz --model_name 774M
 
 #### 117M
+cd poetry/gpt-2
 conda activate gpt2
 export CUDA_VISIBLE_DEVICES=1
 PYTHONPATH=src ./train.py --model_name 117M --dataset ../data/total.npz \
     --run_name=poet_117M --batch_size 5 --save_every 10000 --sample_every 1000 --learning_rate 2e-5
-# 1.68
+# 1.62
 
 PYTHONPATH=src ./train.py --model_name 117M --dataset ../data/total.npz \
     --run_name=poet_117M --batch_size 5 --save_every 10000 --sample_every 1000 --learning_rate 2e-6
 
 #### 345M
+cd poetry/gpt-2
 conda activate gpt2
 export CUDA_VISIBLE_DEVICES=2
 PYTHONPATH=src ./train.py --model_name 345M --dataset ../data/total.npz \
     --run_name=poet_345M --batch_size 3 --save_every 10000 --sample_every 1000 --learning_rate 2e-5 --memory_saving_gradients 
-# 1.56
+# 1.49
 
 PYTHONPATH=src ./train.py --model_name 345M --dataset ../data/total.npz \
     --run_name=poet_345M --batch_size 3 --save_every 10000 --sample_every 1000 --learning_rate 2e-6 --memory_saving_gradients 
 
 #### 774M
+cd poetry/gpt-2
 conda activate gpt2
 export CUDA_VISIBLE_DEVICES=3
 PYTHONPATH=src ./train.py --model_name 774M --dataset ../data/total.npz \
     --run_name=poet2_774M --batch_size 1 --save_every 10000 --sample_every 1000 --learning_rate 1e-3 --optimizer=sgd 
-# 2.78
+# 2.75
 
 # t.me/NeuroPoetBot
 
