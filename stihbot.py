@@ -67,7 +67,7 @@ elif length > hparams.n_ctx:
     raise ValueError("Can't get samples longer than window size: %s" % hparams.n_ctx)
 
 conf = tf.ConfigProto()
-conf.gpu_options.per_process_gpu_memory_fraction=0.5
+conf.gpu_options.per_process_gpu_memory_fraction=0.1
 lock = threading.Lock()
 
 graph=tf.Graph()
