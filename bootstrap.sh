@@ -39,7 +39,7 @@ conda activate gpt2
 export CUDA_VISIBLE_DEVICES=1
 PYTHONPATH=src ./train.py --model_name 117M --dataset ../data/total.npz \
     --run_name=poet_117M --batch_size 5 --save_every 10000 --sample_every 1000 --learning_rate 2e-5
-# 1.57
+# 1.48
 
 PYTHONPATH=src ./train.py --model_name 117M --dataset ../data/total.npz \
     --run_name=poet_117M --batch_size 5 --save_every 10000 --sample_every 1000 --learning_rate 2e-6
@@ -50,7 +50,7 @@ conda activate gpt2
 export CUDA_VISIBLE_DEVICES=2
 PYTHONPATH=src ./train.py --model_name 345M --dataset ../data/total.npz \
     --run_name=poet_345M --batch_size 3 --save_every 10000 --sample_every 1000 --learning_rate 2e-5 --memory_saving_gradients 
-# 1.40
+# 1.23
 
 PYTHONPATH=src ./train.py --model_name 345M --dataset ../data/total.npz \
     --run_name=poet_345M --batch_size 3 --save_every 10000 --sample_every 1000 --learning_rate 2e-6 --memory_saving_gradients 
@@ -65,4 +65,6 @@ PYTHONPATH=src ./train.py --model_name 774M --dataset ../data/total.npz \
 
 # t.me/NeuroPoetBot
 
+cd poetry/
+conda activate gpt2
 python scheduler.py
